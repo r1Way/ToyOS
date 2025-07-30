@@ -1,0 +1,26 @@
+# 构建输出
+build/
+firmware/
+kernel
+kernel.bin
+*.o
+*.a
+*.elf
+
+# OpenSBI 构建目录
+opensbi/build/
+
+# 开发工具文件  
+tags
+cscope*
+*~
+.*.swp
+.*.swo
+
+# IDE 文件
+.vscode/
+.idea/
+
+# 调试文件
+*.log
+core
