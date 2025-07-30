@@ -1,6 +1,6 @@
 /* filepath: g:\project\2025\os_step\ToyOS\kernel.ld */
 OUTPUT_ARCH(riscv)
-ENTRY(_start)
+ENTRY(_entry)
 
 SECTIONS
 {
@@ -21,5 +21,8 @@ SECTIONS
     
     .bss : {
         *(.bss .bss.*)
+        . = ALIGN(8);
+        stack0 = .;
+        . += 4096 * 16;
     }
 }
