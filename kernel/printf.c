@@ -1,8 +1,13 @@
 #include <stdarg.h>
-#include "types.h"
 
+// 数据类型声明，方便 sbi_call 使用
+typedef unsigned long      uint64;
 
-static inline int sbi_call(uint64 which, uint64 arg0, uint64 arg1, uint64 arg2)
+// 内联函数声明
+int sbi_call(uint64 which, uint64 arg0, uint64 arg1, uint64 arg2);
+
+// sBI 调用函数
+int inline sbi_call(uint64 which, uint64 arg0, uint64 arg1, uint64 arg2)
 {
     register uint64 a0 asm("a0") = arg0;
     register uint64 a1 asm("a1") = arg1;

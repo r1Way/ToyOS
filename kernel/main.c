@@ -1,4 +1,6 @@
-#include "defs.h"
+
+// printf 函数声明
+void printf(const char *fmt, ...) __attribute__((format(printf, 1, 2)));
 
 void main() {
   // 主函数，当前为空
