@@ -9,6 +9,8 @@ void main();
  * 调用链：
  * _entry (entry.S) -> start() (start.c) -> main() (main.c)
  */
-void start() {
+void start() 
+{
+  // 现在还没有dual mode，暂时直接调用 main 函数
   main();
 }

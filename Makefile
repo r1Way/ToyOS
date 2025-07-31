@@ -17,7 +17,12 @@ LDFLAGS = -z max-page-size=4096
 
 # Kernel source files
 K = kernel
-KERNEL_SRCS = $(K)/entry.S $(K)/main.c $(K)/start.c
+KERNEL_SRCS = \
+	$(K)/entry.S \
+	$(K)/main.c \
+	$(K)/start.c \
+	$(K)/printf.c \
+
 KERNEL_LD = $(K)/kernel.ld
 
 # Build targets
