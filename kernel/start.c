@@ -1,3 +1,6 @@
+#include "types.h"
+#include "riscv.h"
+
 // 函数声明，定义在main.c中
 void main();
 

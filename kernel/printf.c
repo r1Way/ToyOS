@@ -1,29 +1,18 @@
 #include <stdarg.h>
+#include "types.h"
+#include "sbi.h"
 
-// 数据类型声明，方便 sbi_call 使用
-typedef unsigned long      uint64;
-
-// 内联函数声明
-int sbi_call(uint64 which, uint64 arg0, uint64 arg1, uint64 arg2);
-
-// sBI 调用函数
-int inline sbi_call(uint64 which, uint64 arg0, uint64 arg1, uint64 arg2)
-{
-    register uint64 a0 asm("a0") = arg0;
-    register uint64 a1 asm("a1") = arg1;
-    register uint64 a2 asm("a2") = arg2;
-    register uint64 a7 asm("a7") = which;
-    asm volatile("ecall"
-    : "=r"(a0) // 输出约束：a0 寄存器的值作为返回值
-    : "r"(a0),"r"(a1),"r"(a2),"r"(a7) // 输入约束：使用这些寄存器作为参数
-    : "memory") ; // 副作用：告诉编译器内存可能被修改
-    return a0;
-}
 
 /**
  * 通过 SBI 调用输出单个字符
  */
 void console_putc(char c)
+{
+    sbi_call(1, c, 0, 0);  // SBI 调用号 1 是 console_putchar
+}
+
+// 功能与console_putc 完全相同，只是为了sys_myHelloWorld 函数的实现,重新写了一遍
+void sbi_console_putchar(char c)
 {
     sbi_call(1, c, 0, 0);  // SBI 调用号 1 是 console_putchar
 }
@@ -169,4 +158,14 @@ void printf(const char *fmt, ...)
         fmt++;
     }
     va_end(list);
+}
+
+uint64 sys_myHelloWorld()
+{
+    const char *str ="Hello, World!\n";
+    for(int i=0;str[i]!='\0';i++){
+        sbi_console_putchar(str[i]);  // 使用 SBI 调用输出字符
+    }
+
+    while(1) {}// 防止程序退出（裸机环境下需要）
 }

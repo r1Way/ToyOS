@@ -9,6 +9,7 @@ SECTIONS
     .text : {
         *(.text.entry)
         *(.text .text.*)
+        *(trampsec)
     }
     
     .rodata : {

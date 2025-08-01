@@ -17,17 +17,29 @@ LDFLAGS = -z max-page-size=4096
 
 # Kernel source files
 K = kernel
+U = user
 KERNEL_SRCS = \
 	$(K)/entry.S \
-	$(K)/main.c \
 	$(K)/start.c \
 	$(K)/printf.c \
+	$(K)/sbi.c \
+	$(K)/trap.c \
+	$(K)/trampoline.S \
+	$(K)/syscall.c 
 
 KERNEL_LD = $(K)/kernel.ld
 
+USER_SRCS = \
+	$(U)/main.c \
+	$(U)/usys.S \
+
+# Generate usys.S from usys.pl
+$(U)/usys.S: $(U)/usys.pl
+	cd $(U) && perl usys.pl > usys.S
+
 # Build targets
-$(K)/kernel: $(KERNEL_SRCS) $(KERNEL_LD)
-	$(CC) $(CFLAGS) -T $(KERNEL_LD) -o $(K)/kernel $(KERNEL_SRCS)
+$(K)/kernel: $(KERNEL_SRCS) $(USER_SRCS) $(KERNEL_LD)
+	$(CC) $(CFLAGS) -T $(KERNEL_LD) -o $(K)/kernel $(KERNEL_SRCS) $(USER_SRCS)
 
 $(K)/kernel.bin: $(K)/kernel
 	$(OBJCOPY) $(K)/kernel --strip-all -O binary $(K)/kernel.bin
@@ -68,6 +80,7 @@ qemu-gdb: $(K)/kernel
 # Clean build artifacts
 clean:
 	rm -f $(K)/kernel $(K)/kernel.bin
+	rm -f $(U)/usys.S
 	rm -f *.tex *.dvi *.idx *.aux *.log *.ind *.ilg
 	rm -f */*.o */*.d */*.asm */*.sym
 
