@@ -40,8 +40,8 @@ $(K)/kernel.bin: $(K)/kernel
 # QEMU configuration
 CPUS = 1
 QEMU_MACHINE = virt
-# QEMU_BIOS = default
-QEMU_BIOS = none
+QEMU_BIOS = default
+# QEMU_BIOS = none
 QEMU_MEM = 128M
 
 # QEMU options
