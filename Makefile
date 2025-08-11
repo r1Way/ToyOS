@@ -9,7 +9,7 @@ OBJCOPY = $(CROSS_COMPILE)objcopy
 QEMU = qemu-system-riscv64
 
 # Compiler flags
-CFLAGS = -march=rv64g -mabi=lp64d -mcmodel=medany -fno-common -g -fno-stack-protector
+CFLAGS = -march=rv64g -mabi=lp64d -mcmodel=medany -fno-common -g -fno-stack-protector -O0
 CFLAGS += -fno-pie -no-pie -nostdlib -nostartfiles -ffreestanding -Wl,--build-id=none
 
 # Linker flags
@@ -19,19 +19,12 @@ LDFLAGS = -z max-page-size=4096
 K = kernel
 U = user
 KERNEL_SRCS = \
-	$(K)/entry.S \
-	$(K)/start.c \
-	$(K)/printf.c \
-	$(K)/sbi.c \
-	$(K)/trap.c \
-	$(K)/trampoline.S \
-	$(K)/syscall.c 
+	$(K)/entry.S 
 
 KERNEL_LD = $(K)/kernel.ld
 
 USER_SRCS = \
-	$(U)/main.c \
-	$(U)/usys.S \
+
 
 # Generate usys.S from usys.pl
 $(U)/usys.S: $(U)/usys.pl
@@ -47,7 +40,8 @@ $(K)/kernel.bin: $(K)/kernel
 # QEMU configuration
 CPUS = 1
 QEMU_MACHINE = virt
-QEMU_BIOS = default
+# QEMU_BIOS = default
+QEMU_BIOS = none
 QEMU_MEM = 128M
 
 # QEMU options
