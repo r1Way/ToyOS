@@ -23,7 +23,7 @@ SECTIONS
     .bss : {
         *(.bss .bss.*)
         . = ALIGN(8);
-        stack0 = .;
         . += 4096 * 16;
+        stack0 = .;
     }
 }
