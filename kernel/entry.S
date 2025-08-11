@@ -7,7 +7,7 @@ _entry:
         # sp = stack0 + ( hartid * 4090 * 16 )
         la sp, stack0
         li a0, 4096*16
-        csrr a1, mstatus
+        csrr a1, sstatus
         add sp, sp, a0
         # jump to start() in start.c
         # call start
