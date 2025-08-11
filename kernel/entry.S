@@ -5,6 +5,7 @@ message:
 .section .text
 .global _entry
 _entry:
+        # now we are in the S mode
         # output the string first
         la t0, message
 print_loop:
@@ -23,5 +24,6 @@ end:
         la sp, stack0
         li a0, 4096*16
         add sp, sp, a0
+        # csrr a1, sstatus 
         # jump to start() in start.c
         call start
