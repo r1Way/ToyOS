@@ -22,6 +22,7 @@ SECTIONS
     .bss : {
         *(.bss .bss.*)
         . = ALIGN(8);
+        # stack0是栈底，entry.S中会将sp向上移动一部分空间（移至栈顶）。
         stack0 = .;
         . += 4096 * 16;
     }
