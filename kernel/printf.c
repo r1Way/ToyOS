@@ -2,6 +2,7 @@
 #include "types.h"
 #include "sbi.h"
 
+volatile int panicked = 0;
 
 /**
  * 通过 SBI 调用输出单个字符
@@ -168,4 +169,16 @@ uint64 sys_myHelloWorld()
     }
 
     while(1) {}// 防止程序退出（裸机环境下需要）
+}
+
+void
+panic(char *s)
+{
+//   pr.locking = 0;
+  printf("panic: ");
+  printf("%s", s);
+  printf("\n");
+  panicked = 1; // freeze uart output from other CPUs
+  for(;;)
+    ;
 }

@@ -10,6 +10,7 @@ SECTIONS
         *(.text.entry)
         *(.text .text.*)
         *(trampsec)
+        PROVIDE(etext = .);
     }
     
     .rodata : {
@@ -24,4 +25,6 @@ SECTIONS
         *(.bss .bss.*)
         . = ALIGN(8);
     }
+
+    PROVIDE(end = .);
 }

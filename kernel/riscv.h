@@ -329,8 +329,8 @@ sfence_vma()
   asm volatile("sfence.vma zero, zero");
 }
 
-typedef uint64 pte_t;
-typedef uint64 *pagetable_t; // 512 PTEs
+typedef uint64 pte_t;//表示单个页表项
+typedef uint64 *pagetable_t; // 512 PTEs //指向页表的指针
 
 #endif // __ASSEMBLER__
 

@@ -1,4 +1,7 @@
 .section trampsec
+.globl trampoline
+trampoline:
+.align 4
 .globl usertrap
 .globl uservec
 .globl userret

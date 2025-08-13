@@ -25,7 +25,10 @@ KERNEL_SRCS = \
 	$(K)/sbi.c \
 	$(K)/trap.c \
 	$(K)/trampoline.S \
-	$(K)/syscall.c 
+	$(K)/syscall.c \
+	$(K)/string.c \
+	$(K)/kalloc.c \
+	$(K)/vm.c 
 
 KERNEL_LD = $(K)/kernel.ld
 
