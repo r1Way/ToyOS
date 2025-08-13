@@ -21,6 +21,7 @@ extern void* kalloc(void);
 
 //本文件函数声明
 void kvminit(void);
+void kvminithart(void);
 pagetable_t kvmmake(void);
 void kvmmap(pagetable_t kpgtbl, uint64 va, uint64 pa, uint64 sz, int perm);
 int mappages(pagetable_t pagetable, uint64 va, uint64 size, uint64 pa, int perm);
@@ -33,6 +34,20 @@ kvminit(void)
   kernel_pagetable = kvmmake();
 }
 
+// Switch h/w page table register to the kernel's page table,
+// and enable paging.
+void
+kvminithart(void)
+{
+  // wait for any previous writes to the page table memory to finish.
+  sfence_vma();
+
+  w_satp(MAKE_SATP(kernel_pagetable));
+
+  // flush stale entries from the TLB.
+  sfence_vma();
+}
+
 // Make a direct-map page table for the kernel.
 pagetable_t
 kvmmake(void)
@@ -42,16 +57,26 @@ kvmmake(void)
   kpgtbl = (pagetable_t) kalloc();
   memset(kpgtbl, 0, PGSIZE);
 
+  // 结合qemu监视器指令 gva2gpa 0x00000000，可以用来查看0x00000000虚拟地址对应的物理地址
+  // 别忘了将页表地址放进SATP寄存器中，以及要刷新TLB。
+  // 将物理地址0x00000000映射到虚拟地址0x10000000，VA！=PA，
+  // 方便我们验证地址映射是否成功。测试完后可以删去。
+  kvmmap(kpgtbl, 0, 0x10000000L, PGSIZE, PTE_R | PTE_W);
+
   // uart registers
+  // UART0 0x10000000L
   kvmmap(kpgtbl, UART0, UART0, PGSIZE, PTE_R | PTE_W);
 
   // virtio mmio disk interface
+  // VIRTIO0 0x10001000
   kvmmap(kpgtbl, VIRTIO0, VIRTIO0, PGSIZE, PTE_R | PTE_W);
 
   // PLIC
+  //PLIC 0x0c000000L
   kvmmap(kpgtbl, PLIC, PLIC, 0x400000, PTE_R | PTE_W);
 
   // map kernel text executable and read-only.
+  // KERNBASE 0x80000000L
   kvmmap(kpgtbl, KERNBASE, KERNBASE, (uint64)etext-KERNBASE, PTE_R | PTE_X);
 
   // map kernel data and the physical RAM we'll make use of.

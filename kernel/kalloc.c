@@ -1,6 +1,8 @@
 #include "riscv.h"
 #include "memlayout.h"
 
+void freerange(void *pa_start, void *pa_end);
+
 //print.c
 extern void panic(char *s);
 //string.c
@@ -10,14 +12,34 @@ extern void* memset(void *dst, int c, uint n);
 extern char end[]; // first address after kernel.
                    // defined by kernel.ld.
 
+// run是结点node
 struct run {
   struct run *next;
 };
 
+//kmem是管理这个链表的结构体
 struct {
 //   struct spinlock lock;
   struct run *freelist;
 } kmem;
+
+//将空闲内存链表初始化
+void
+kinit()
+{
+    //   initlock(&kmem.lock, "kmem");
+    //memlayout.h #define PHYSTOP (KERNBASE + 128*1024*1024) 
+  freerange(end, (void*)PHYSTOP);
+}
+
+void
+freerange(void *pa_start, void *pa_end)
+{
+  char *p;
+  p = (char*)PGROUNDUP((uint64)pa_start);
+  for(; p + PGSIZE <= (char*)pa_end; p += PGSIZE)
+    kfree(p);
+}
 
 // Free the page of physical memory pointed at by pa,
 // which normally should have been returned by a
