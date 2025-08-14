@@ -1,16 +1,7 @@
 #include "riscv.h"
 #include "memlayout.h"
-
-void freerange(void *pa_start, void *pa_end);
-
-//print.c
-extern void panic(char *s);
-//string.c
-extern void* memset(void *dst, int c, uint n);
-
-
-extern char end[]; // first address after kernel.
-                   // defined by kernel.ld.
+#include "types.h"
+#include "defs.h"
 
 // run是结点node
 struct run {

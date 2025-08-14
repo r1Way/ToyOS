@@ -1,6 +1,6 @@
 #include "types.h"
 #include "riscv.h"
-#include "sbi.h"
+#include "defs.h"
 #include "syscall.h"
 
 // 声明userret函数

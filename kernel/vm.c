@@ -1,6 +1,7 @@
 #include"types.h"
 #include "riscv.h"
 #include "memlayout.h"
+#include "defs.h"
 
 
 /*
@@ -8,24 +9,6 @@
  */
 pagetable_t kernel_pagetable;
 
-extern char etext[];  // kernel.ld sets this to end of kernel code.
-
-extern char trampoline[]; // trampoline.S
-
-//string.c
-extern void* memset(void *dst, int c, uint n);
-//print.c
-extern void panic(char *s);
-//kalloc.c
-extern void* kalloc(void);
-
-//本文件函数声明
-void kvminit(void);
-void kvminithart(void);
-pagetable_t kvmmake(void);
-void kvmmap(pagetable_t kpgtbl, uint64 va, uint64 pa, uint64 sz, int perm);
-int mappages(pagetable_t pagetable, uint64 va, uint64 size, uint64 pa, int perm);
-pte_t * walk(pagetable_t pagetable, uint64 va, int alloc);
 
 // Initialize the one kernel_pagetable
 void

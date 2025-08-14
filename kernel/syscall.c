@@ -3,8 +3,6 @@
 #include "syscall.h"
 #include "defs.h"
 
-extern uint64 sys_myHelloWorld(void);
-
 // 一个函数指针数组，数组中每个元素都是指向函数的指针
 static uint64 (*syscalls[])(void) = {
     [SYS_myHelloWorld] sys_myHelloWorld,

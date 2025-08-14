@@ -1,3 +1,5 @@
+#ifndef __RISCV_H
+#define __RISCV_H
 #include "types.h"
 
 #ifndef __ASSEMBLER__
@@ -363,3 +365,4 @@ typedef uint64 *pagetable_t; // 512 PTEs //指向页表的指针
 // Sv39, to avoid having to sign-extend virtual addresses
 // that have the high bit set.
 #define MAXVA (1L << (9 + 9 + 9 + 12 - 1))
+#endif // __RISCV_H

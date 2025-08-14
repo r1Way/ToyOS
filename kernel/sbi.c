@@ -1,7 +1,7 @@
 #include "types.h"
-#include "sbi.h"
+#include "defs.h"
 // sBI 调用函数
-int inline sbi_call(uint64 which, uint64 arg0, uint64 arg1, uint64 arg2)
+int sbi_call(uint64 which, uint64 arg0, uint64 arg1, uint64 arg2)
 {
     register uint64 a0 asm("a0") = arg0;
     register uint64 a1 asm("a1") = arg1;

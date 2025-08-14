@@ -1,6 +1,6 @@
 #include <stdarg.h>
 #include "types.h"
-#include "sbi.h"
+#include "defs.h"  
 
 volatile int panicked = 0;
 
