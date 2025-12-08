@@ -44,7 +44,7 @@ kvmmake(void)
   // 别忘了将页表地址放进SATP寄存器中，以及要刷新TLB。
   // 将物理地址0x00000000映射到虚拟地址0x10000000，VA！=PA，
   // 方便我们验证地址映射是否成功。测试完后可以删去。
-  kvmmap(kpgtbl, 0, 0x10000000L, PGSIZE, PTE_R | PTE_W);
+  // kvmmap(kpgtbl, 0, 0x10000000L, PGSIZE, PTE_R | PTE_W);
 
   // uart registers
   // UART0 0x10000000L
@@ -70,7 +70,7 @@ kvmmake(void)
   kvmmap(kpgtbl, TRAMPOLINE, (uint64)trampoline, PGSIZE, PTE_R | PTE_X);
 
 //   // allocate and map a kernel stack for each process.
-//   proc_mapstacks(kpgtbl);
+  proc_mapstacks(kpgtbl);
   
   return kpgtbl;
 }

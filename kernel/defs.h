@@ -43,6 +43,9 @@ void start(void);
 //main.c - 主函数
 void main(void);
 
+//proc.c - 进程管理
+void proc_mapstacks(pagetable_t kpgtbl);
+
 // syscall.c - 系统调用
 void syscall(void);
 

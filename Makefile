@@ -28,7 +28,8 @@ KERNEL_SRCS = \
 	$(K)/syscall.c \
 	$(K)/string.c \
 	$(K)/kalloc.c \
-	$(K)/vm.c 
+	$(K)/vm.c \
+	$(K)/proc.c
 
 KERNEL_LD = $(K)/kernel.ld
 
