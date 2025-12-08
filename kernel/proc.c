@@ -12,6 +12,15 @@ struct proc proc[NPROC];
 
 struct proc *initproc;
 
+int nextpid = 1;
+struct spinlock pid_lock;
+
+// helps ensure that wakeups of wait()ing
+// parents are not lost. helps obey the
+// memory model when using p->parent.
+// must be acquired before any p->lock.
+struct spinlock wait_lock;
+
 // 为每个进程分配一个内核栈页面，并将其映射到高地址，后面跟一个无效的保护页。
 void
 proc_mapstacks(pagetable_t kpgtbl)
@@ -24,6 +33,22 @@ proc_mapstacks(pagetable_t kpgtbl)
       panic("kalloc");
     uint64 va = KSTACK((int) (p - proc));
     kvmmap(kpgtbl, va, (uint64)pa, PGSIZE, PTE_R | PTE_W);
+  }
+}
+
+// initialize the proc table.
+// 初始化进程表
+void
+procinit(void)
+{
+  struct proc *p;
+  
+  initlock(&pid_lock, "nextpid");
+  initlock(&wait_lock, "wait_lock");
+  for(p = proc; p < &proc[NPROC]; p++) {
+      initlock(&p->lock, "proc");
+      p->state = UNUSED;
+      p->kstack = KSTACK((int) (p - proc));
   }
 }
 

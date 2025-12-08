@@ -45,6 +45,7 @@ void main(void);
 
 //proc.c - 进程管理
 void proc_mapstacks(pagetable_t kpgtbl);
+void procinit(void);
 int cpuid(void);
 struct cpu* mycpu(void);
 struct proc* myproc(void);
