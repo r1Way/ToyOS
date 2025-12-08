@@ -20,6 +20,7 @@ void start()
   kinit(); // 初始化内核的内存分配器
   kvminit(); // 初始化内核的页表
   kvminithart(); // 切换到内核页表并启用分页
+  
   // 现在还没有dual mode，暂时直接调用 main 函数
   main();
 }

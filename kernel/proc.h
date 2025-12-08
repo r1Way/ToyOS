@@ -1,3 +1,4 @@
+#include "param.h"
 #include "spinlock.h"
 #ifndef PROC_H
 #define PROC_H

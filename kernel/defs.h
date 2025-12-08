@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "riscv.h"
-
+#include "spinlock.h"
 // 计算静态数组的元素个数，检验系统调用号是否越界
 #define NELEM(x) (sizeof(x) / sizeof((x)[0]))
 
@@ -45,9 +45,21 @@ void main(void);
 
 //proc.c - 进程管理
 void proc_mapstacks(pagetable_t kpgtbl);
+int cpuid(void);
+struct cpu* mycpu(void);
+struct proc* myproc(void);
+
 
 // syscall.c - 系统调用
 void syscall(void);
+
+// spinlock.c - 自旋锁
+void initlock(struct spinlock *lk, char *name);
+void acquire(struct spinlock *lk);
+void release(struct spinlock *lk);
+int holding(struct spinlock *lk);
+void push_off(void);
+void pop_off(void);
 
 // trap.c - 中断和异常处理
 // void trap(void);

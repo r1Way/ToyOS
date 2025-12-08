@@ -2,6 +2,7 @@
 #include "memlayout.h"
 #include "types.h"
 #include "defs.h"
+#include "spinlock.h"
 
 // run是结点node
 struct run {
@@ -10,7 +11,7 @@ struct run {
 
 //kmem是管理这个链表的结构体
 struct {
-//   struct spinlock lock;
+  struct spinlock lock;
   struct run *freelist;
 } kmem;
 
@@ -18,8 +19,8 @@ struct {
 void
 kinit()
 {
-    //   initlock(&kmem.lock, "kmem");
-    //memlayout.h #define PHYSTOP (KERNBASE + 128*1024*1024) 
+  initlock(&kmem.lock, "kmem");
+  //memlayout.h #define PHYSTOP (KERNBASE + 128*1024*1024) 
   freerange(end, (void*)PHYSTOP);
 }
 
@@ -49,10 +50,10 @@ kfree(void *pa)
 
   r = (struct run*)pa;
 
-//   acquire(&kmem.lock);
+  acquire(&kmem.lock);
   r->next = kmem.freelist;
   kmem.freelist = r;
-//   release(&kmem.lock);
+  release(&kmem.lock);
 }
 
 // Allocate one 4096-byte page of physical memory.
@@ -63,11 +64,11 @@ kalloc(void)
 {
   struct run *r;
 
-//   acquire(&kmem.lock);
+  acquire(&kmem.lock);
   r = kmem.freelist;
   if(r)
     kmem.freelist = r->next;
-//   release(&kmem.lock);
+  release(&kmem.lock);
 
   if(r)
     memset((char*)r, 5, PGSIZE); // fill with junk
