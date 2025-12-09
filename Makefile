@@ -57,7 +57,7 @@ QEMU_MEM = 128M
 
 # QEMU options
 QEMUOPTS = -machine $(QEMU_MACHINE) -bios $(QEMU_BIOS) -kernel $(K)/kernel
-QEMUOPTS += -m $(QEMU_MEM) -nographic
+QEMUOPTS += -smp $(CPUS) -m $(QEMU_MEM) -nographic
 QEMUOPTS += -global virtio-mmio.force-legacy=false
 
 # Run QEMU without debugging

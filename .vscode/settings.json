@@ -1,0 +1,28 @@
+{
+    // =======================================================
+    // QEMU-GDB Debugging 插件配置项
+    // = =======================================================
+    
+    // 1. QEMU 启动命令
+    // 必须包含 -S (暂停) 和 -gdb tcp::26000 (GDB端口)
+    "qemu-gdb-debug.startQemuCommand": "qemu-system-riscv64 -machine virt -bios default -kernel ${workspaceFolder}/kernel/kernel -smp 3 -m 128M -nographic -global virtio-mmio.force-legacy=false -S -gdb tcp::26000",
+
+    // 2. GDB 服务器地址和端口
+    "qemu-gdb-debug.serverAddress": "localhost:26000",
+    
+    // 3. GDB 调试器的绝对路径
+    // 请确认 '/usr/bin/gdb-multiarch' 是你系统中实际的路径
+    "qemu-gdb-debug.gdbPath": "/usr/bin/gdb-multiarch",
+
+    // 4. 可执行文件路径 (用于GDB加载调试符号)
+    "qemu-gdb-debug.executablePath": "${workspaceFolder}/kernel/kernel",
+    
+    // 5. QEMU 停止命令 (可选，用于调试结束时自动清理 QEMU 进程)
+    "qemu-gdb-debug.stopQemuCommand": "pkill -f qemu-system-riscv64",
+    
+    // 6. GDB 启动时的初始化命令 (可选，用于设置 RISC-V 架构)
+    // 这是一个数组，用于在连接前执行 GDB 命令，相当于 launch.json 中的 setupCommands
+    "qemu-gdb-debug.gdbInitCommands": [
+        "set architecture riscv:rv64"
+    ]
+}

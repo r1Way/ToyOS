@@ -34,22 +34,21 @@ uint64 sys_myHelloWorld(void);
 void *memset(void *dst, int c, uint n);
 
 // sbi.c - SBI调用
-//奇了怪了，用inline就是链接不了报错。
+// 奇了怪了，用inline就是链接不了报错。
 int sbi_call(uint64 which, uint64 arg0, uint64 arg1, uint64 arg2);
 
 // start.c - 启动相关
 void start(void);
 
-//main.c - 主函数
+// main.c - 主函数
 void main(void);
 
-//proc.c - 进程管理
+// proc.c - 进程管理
 void proc_mapstacks(pagetable_t kpgtbl);
 void procinit(void);
 int cpuid(void);
-struct cpu* mycpu(void);
-struct proc* myproc(void);
-
+struct cpu *mycpu(void);
+struct proc *myproc(void);
 
 // syscall.c - 系统调用
 void syscall(void);

@@ -2,8 +2,7 @@
 #include "spinlock.h"
 #include "proc.h"
 
-void
-initlock(struct spinlock *lk, char *name)
+void initlock(struct spinlock *lk, char *name)
 {
   lk->name = name;
   lk->locked = 0;
@@ -13,18 +12,19 @@ initlock(struct spinlock *lk, char *name)
 // Acquire the lock.
 // Loops (spins) until the lock is acquired.
 // 获取锁。
-void
-acquire(struct spinlock *lk)
+void acquire(struct spinlock *lk)
 {
   push_off(); // disable interrupts to avoid deadlock.
-  if(holding(lk))
+
+  if (holding(lk))
     panic("acquire");
 
   // On RISC-V, sync_lock_test_and_set turns into an atomic swap:
   //   a5 = 1
   //   s1 = &lk->locked
   //   amoswap.w.aq a5, a5, (s1)
-  while(__sync_lock_test_and_set(&lk->locked, 1) != 0)
+  // 尝试将 lk->locked 设为 1（表示加锁）
+  while (__sync_lock_test_and_set(&lk->locked, 1) != 0)
     ;
 
   // Tell the C compiler and the processor to not move loads or stores
@@ -39,11 +39,10 @@ acquire(struct spinlock *lk)
 
 // Release the lock.
 // 释放锁。
-void
-release(struct spinlock *lk)
+void release(struct spinlock *lk)
 {
-   // 如果当前 CPU 没有持有该锁，则报错
-  if(!holding(lk))
+  // 如果当前 CPU 没有持有该锁，则报错
+  if (!holding(lk))
     panic("release");
 
   // 清除持有锁的 CPU 信息
@@ -65,7 +64,7 @@ release(struct spinlock *lk)
   // On RISC-V, sync_lock_release turns into an atomic swap:
   //   s1 = &lk->locked
   //   amoswap.w zero, zero, (s1)
-   // 原子释放锁（将 lk->locked 设为 0）
+  // 原子释放锁（将 lk->locked 设为 0）
   __sync_lock_release(&lk->locked);
 
   pop_off();
@@ -74,8 +73,7 @@ release(struct spinlock *lk)
 // Check whether this cpu is holding the lock.
 // Interrupts must be off.
 // 判断当前 CPU 是否持有该锁
-int
-holding(struct spinlock *lk)
+int holding(struct spinlock *lk)
 {
   int r;
   r = (lk->locked && lk->cpu == mycpu());
@@ -87,28 +85,26 @@ holding(struct spinlock *lk)
 // are initially off, then push_off, pop_off leaves them off.
 // 关闭中断，并记录之前的中断状态。
 // 用于进入临界区，防止中断导致死锁。
-void
-push_off(void)
+void push_off(void)
 {
   int old = intr_get();
 
   intr_off();
-  if(mycpu()->noff == 0)
+  if (mycpu()->noff == 0)
     mycpu()->intena = old;
   mycpu()->noff += 1;
 }
 
 // 恢复中断状态
 // 用于退出临界区。
-void
-pop_off(void)
+void pop_off(void)
 {
   struct cpu *c = mycpu();
-  if(intr_get())
+  if (intr_get())
     panic("pop_off - interruptible");
-  if(c->noff < 1)
+  if (c->noff < 1)
     panic("pop_off");
   c->noff -= 1;
-  if(c->noff == 0 && c->intena)
+  if (c->noff == 0 && c->intena)
     intr_on();
 }

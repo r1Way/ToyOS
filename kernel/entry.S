@@ -4,6 +4,7 @@ message:
 
 .section .text
 .global _entry
+
 _entry:
         # now we are in the S mode
         # output the string first
@@ -21,9 +22,18 @@ end:
         # stack0 is declared in start.c
         # with a 4096-byte stack per CPU
         # sp = stack0 + ( hartid * 4090 * 16 )
+        # a0存放着hartid，参考opensbi的sbi_hart.c
+        # 对于单cpu，hartid=0
+        # 对于多cpu，每次启动时的hartid可能是不同的，我们需要将sp设置到该cpu对应的栈空间上
+        # CPU取决于makefile，不过param.h中的宏NCPU也要记得修改
         la sp, stack0
-        li a0, 4096*16
+        la t1, hartid # 将hartid地址写入t1
+        sw a0, 0(t1) # 将a0写入hartid，方便后续使用
+        mv a2, a0
+        li a0, 1024*4
+        addi a2, a2, 1
+        mul a0, a0, a2
         add sp, sp, a0
-        # csrr a1, sstatus 
+
         # jump to start() in start.c
         call start

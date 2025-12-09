@@ -1,4 +1,11 @@
 gdb-multiarch kernel/kernel \
   -ex "set architecture riscv:rv64" \
   -ex "target remote localhost:26000" \
-  -ex "layout split" 
+  -ex "layout split" \
+  -ex "b main" \
+  -ex "b kvminit" \
+  -ex "b procinit" \
+  -ex "b spinlock.c:90" \
+  -ex "b proc.c:68" \
+  -ex "b proc.c:60" \
+  -ex "b *0x80200000"
